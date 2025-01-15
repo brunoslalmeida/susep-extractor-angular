@@ -9,5 +9,5 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'susep-extractor-angular';
+  title = 'susep-extractor-angular 2';
 }
