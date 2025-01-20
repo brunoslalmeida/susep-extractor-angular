@@ -34,13 +34,15 @@
         <div class="w-full">
           <div class="sm:col-span-3 mt-5">
             <label
-              for="comapnies"
+              for="company"
               class="block text-sm/6 font-medium text-gray-900"
               >Empresas</label
             >
             <div class="mt-2 grid grid-cols-1">
               <select
-                formControlName="type"
+                id="company"
+                autocomplete="off"
+                formControlName="company"
                 class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               >
                 <option
@@ -72,10 +74,11 @@
             >
             <div class="mt-2 grid grid-cols-1">
               <select
+                id="types"
+                autocomplete="off"
                 formControlName="type"
                 class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               >
-                <option>Todos</option>
                 <option
                   *ngFor="let type of types"
                   [value]="type.code"
@@ -100,50 +103,38 @@
             </div>
             <div class="mt-7 grid grid-cols-2 gap-4">
               <div class="relative max-w-sm">
-                <div
-                  class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none"
-                >
-                  <svg
-                    class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
-                    />
-                  </svg>
-                </div>
-                <input
-                  datepicker
-                  type="text"
-                  class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Data Início"
-                />
+                <mat-form-field style="display: flex">
+                  <input
+                    matInput
+                    [matDatepicker]="start_picker"
+                    formControlName="start"
+                    class="bg-white"
+                  />
+                  <mat-label>Mês Início</mat-label>
+                  <mat-datepicker-toggle matIconSuffix [for]="start_picker">
+                    <mat-icon matDatepickerToggleIcon
+                      >keyboard_arrow_down</mat-icon
+                    >
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #start_picker></mat-datepicker>
+                </mat-form-field>
               </div>
               <div class="relative max-w-sm">
-                <div
-                  class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none"
-                >
-                  <svg
-                    class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
-                    />
-                  </svg>
-                </div>
-                <input
-                  datepicker
-                  type="text"
-                  class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Data Fim"
-                />
+                <mat-form-field style="display: flex">
+                  <input
+                    matInput
+                    [matDatepicker]="end_picker"
+                    formControlName="end"
+                    class="bg-white"
+                  />
+                  <mat-label>Mês Início</mat-label>
+                  <mat-datepicker-toggle matIconSuffix [for]="end_picker">
+                    <mat-icon matDatepickerToggleIcon
+                      >keyboard_arrow_down</mat-icon
+                    >
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #end_picker></mat-datepicker>
+                </mat-form-field>
               </div>
             </div>
             <div
@@ -151,7 +142,7 @@
             >
               <button class="primary" type="submit">Pesquisar</button>
             </div>
-          </div>
+          </div>{{onHttp}}
         </div>
       </div>
     </form>
