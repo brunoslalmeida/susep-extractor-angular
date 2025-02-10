@@ -143,7 +143,14 @@
               <button class="primary" type="submit">Pesquisar</button>
             </div>
           </div>
-          <div *ngIf="onHttp" class="loading-indicator">Loading...</div>
+          <div *ngIf="onHttp" class="loading-indicator">
+            Loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+          </div>
+          <div *ngIf="log.length > 0" class="log-messages">
+            <ul>
+              <li *ngFor="let message of log">{{ message }}</li>
+            </ul>
+          </div>
         </div>
       </div>
     </form>
