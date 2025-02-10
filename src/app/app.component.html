@@ -144,12 +144,23 @@
             </div>
           </div>
           <div *ngIf="onHttp" class="loading-indicator">
-            Loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+            Loading<span class="dot">.</span><span class="dot">.</span
+            ><span class="dot">.</span>
           </div>
           <div *ngIf="log.length > 0" class="log-messages">
             <ul>
               <li *ngFor="let message of log">{{ message }}</li>
             </ul>
+          </div>
+          <!-- Export button (visible when table data is available) -->
+          <div *ngIf="table" class="mt-5">
+            <button
+              class="primary bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full"
+              type="button"
+              (click)="exportToExcel()"
+            >
+              Export to Excel
+            </button>
           </div>
         </div>
       </div>
