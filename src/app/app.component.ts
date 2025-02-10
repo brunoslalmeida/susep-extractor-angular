@@ -1,12 +1,18 @@
-import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { CommonModule } from '@angular/common';
+import {
+  FormGroup,
+  FormControl,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { MatIconModule } from '@angular/material/icon';
+import * as XLSX from 'xlsx';
 
 interface ICompany {
   code: string;
@@ -48,6 +54,7 @@ export class AppComponent implements OnInit {
 
   hasData = false;
   onHttp = false;
+  log: string[] = [];
 
   table: {
     months: string[];
@@ -60,10 +67,10 @@ export class AppComponent implements OnInit {
   types: IType[] = [];
 
   susepForm = new FormGroup({
-    company: new FormControl(''),
-    type: new FormControl(''),
-    start: new FormControl<Date | undefined>(undefined),
-    end: new FormControl<Date | undefined>(undefined),
+    company: new FormControl('', Validators.required),
+    type: new FormControl('', Validators.required),
+    start: new FormControl<Date | undefined>(undefined, Validators.required),
+    end: new FormControl<Date | undefined>(undefined, Validators.required),
   });
 
   constructor(private http: HttpClient) {}
@@ -79,29 +86,46 @@ export class AppComponent implements OnInit {
           this.companies = data.companies;
           this.types = data.types;
         },
+        error: (error) => {
+          console.error('Error fetching initial data:', error);
+          this.log.push('Error fetching initial data.');
+        },
       });
   }
 
   onSubmit() {
-    console.log(this.susepForm.value);
+    this.log = [];
+
+    if (this.susepForm.invalid) {
+      this.log.push('Form is invalid. Please fill all required fields.');
+      return;
+    }
 
     this.hasData = false;
     this.onHttp = true;
+    this.log = [];
 
     const data = this.susepForm.value;
+    const start = data.start;
+    const end = data.end;
+    const company = data.company;
+    const type = data.type;
 
-    if (
-      data.start == undefined ||
-      data.end == undefined ||
-      data.type == undefined ||
-      data.company == undefined
-    )
+    if (!start || !end || !type || !company) {
+      this.onHttp = false;
+      this.log.push('Missing form data.');
       return;
+    }
 
-    let count = this.monthsBetweenDates(data.start, data.end);
+    if (start > end) {
+      this.onHttp = false;
+      this.log.push('Start date cannot be after end date.');
+      return;
+    }
 
-    this.getReports(data.company, data.start, data.end, data.type);
+    this.getReports(company, start, end, type);
   }
+
   getNextReport(
     company: string,
     start: Date,
@@ -109,23 +133,29 @@ export class AppComponent implements OnInit {
     count: number,
     results: IResult[]
   ) {
-    const month = `${start?.getFullYear()}${(
-      '0' +
-      (start.getMonth() + 1)
-    ).slice(-2)}`;
+    const month = `${start.getFullYear()}${('0' + (start.getMonth() + 1)).slice(
+      -2
+    )}`;
+    this.log.push(`Fetching report for ${month}`);
 
     this.http.post(this.baseUrl, { company, month, type }).subscribe({
       next: (result) => {
         results.push({ month, values: <IValues[]>result });
         console.log(results);
+        this.log.push(`Report for ${month} fetched successfully`);
       },
-      error: console.log,
+      error: (error) => {
+        console.error(`Error fetching report for ${month}:`, error);
+        this.onHttp = false;
+        this.log.push(`Error fetching report for ${month}`);
+      },
       complete: () => {
         count--;
 
         if (count === 0) {
           this.onHttp = false;
           this.table = this.transformData(results);
+          this.log.push('All reports fetched successfully');
         } else {
           const newStart = new Date(start);
           newStart.setMonth(newStart.getMonth() + 1);
@@ -134,44 +164,39 @@ export class AppComponent implements OnInit {
       },
     });
   }
+
   getReports(company: string, start: Date, end: Date, type: string) {
     const count = this.monthsBetweenDates(start, end) + 1;
-    const results: IResult[] = <IResult[]>[];
-
+    const results: IResult[] = [];
     this.getNextReport(company, start, type, count, results);
   }
 
   monthsBetweenDates(start: Date, end: Date) {
-    // Ensure dates are valid Date objects
     if (!(start instanceof Date) || !(end instanceof Date)) {
       throw new Error('Invalid input: Both arguments must be Date objects.');
     }
 
-    // Order dates to ensure end is later than start
     if (end < start) {
-      [start, end] = [end, start]; // Swap dates using destructuring
+      [start, end] = [end, start];
     }
 
     let months = (end.getFullYear() - start.getFullYear()) * 12;
     months -= start.getMonth();
     months += end.getMonth();
 
-    return months <= 0 ? 0 : months; // Return 0 if the difference is negative or zero
+    return months <= 0 ? 0 : months;
   }
 
-  //Code from gemini :)
   transformData(result: IResult[]) {
     if (!result || result.length === 0) {
       return { months: [], names: [], data: [] };
     }
 
     const months = result.map((item) => item.month);
-    // Get all names in their original order, including possible duplicates
     const allNamesWithDuplicates = result.flatMap((item) =>
       item.values.map((val) => val.name)
     );
 
-    // Use a map to preserve order while removing duplicates and handling missing names
     const namesMap = new Map();
     allNamesWithDuplicates.forEach((name) => {
       if (name !== undefined) {
@@ -184,20 +209,26 @@ export class AppComponent implements OnInit {
       const row: { [key: string]: string } = { name };
       months.forEach((month) => {
         const monthData = result.find((item) => item.month === month);
-
         if (monthData && monthData.values) {
-          // Check if values exist
           const nameValue = monthData.values.find((val) => val.name === name);
           row[month] = nameValue ? nameValue.value : '0';
         } else {
-          row[month] = '0'; //Default to 0 if monthData or monthData.values is missing
+          row[month] = '0';
         }
       });
       return row;
     });
 
-    console.log(data)
+    console.log(data);
     return { months, names, data };
+  }
+
+  exportToExcel(): void {
+    if (!this.table) return;
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.table.data);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Report');
+    XLSX.writeFile(wb, 'report.xlsx');
   }
 
   title = 'Susep Extractor';

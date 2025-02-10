@@ -142,7 +142,8 @@
             >
               <button class="primary" type="submit">Pesquisar</button>
             </div>
-          </div>{{onHttp}}
+          </div>
+          <div *ngIf="onHttp" class="loading-indicator">Loading...</div>
         </div>
       </div>
     </form>
