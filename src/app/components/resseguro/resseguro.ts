@@ -133,7 +133,7 @@ export class ResseguroCompoenent implements OnInit {
         )}`;
         this.log.push(`Fetching report for ${month}`);
 
-        this.http.post(this.baseUrl + '/resseguro', { company, month, type }).subscribe({
+        this.http.post(this.baseUrl + 'resseguro', { company, month, type }).subscribe({
             next: (result) => {
                 results.push({ month, values: <IValues[]>result });
                 console.log(results);
