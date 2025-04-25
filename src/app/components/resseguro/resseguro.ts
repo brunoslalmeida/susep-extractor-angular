@@ -2,7 +2,7 @@ import * as XLSX from 'xlsx';
 
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -40,6 +40,7 @@ interface IValues {
         MatInputModule,
         MatFormFieldModule,
         MatDatepickerModule,
+        ReactiveFormsModule
     ]
 })
 export class ResseguroCompoenent implements OnInit {
