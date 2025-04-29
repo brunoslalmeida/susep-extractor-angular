@@ -99,6 +99,7 @@ export class ResseguroCompoenent implements OnInit {
         this.hasData = false;
         this.onHttp = true;
         this.log = [];
+        this.table = null;
 
         const data = this.susepForm.value;
         const start = data.start;

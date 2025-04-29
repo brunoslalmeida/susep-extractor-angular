@@ -98,8 +98,10 @@ export class SeguroCompoenent implements OnInit {
 
         this.hasData = false;
         this.onHttp = true;
-        this.log = [];
 
+        this.log = [];
+        this.table = null;
+        
         const data = this.susepForm.value;
         const start = data.start;
         const end = data.end;
