@@ -44,7 +44,7 @@ interface IValues {
     ]
 })
 export class ResseguroCompoenent implements OnInit {
-    private baseUrl = 'https://susep-extractor.bruno-s-l-almeida.workers.dev/';
+    private baseUrl = 'https://susep-extractor.bruno-s-l-almeida.workers.dev/resseguro';
 
     hasData = false;
     onHttp = false;
@@ -133,7 +133,7 @@ export class ResseguroCompoenent implements OnInit {
         )}`;
         this.log.push(`Fetching report for ${month}`);
 
-        this.http.post(this.baseUrl + 'resseguro', { company, month, type }).subscribe({
+        this.http.post(this.baseUrl, { company, month, type }).subscribe({
             next: (result) => {
                 results.push({ month, values: <IValues[]>result });
                 console.log(results);
