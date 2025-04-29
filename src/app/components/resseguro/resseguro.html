@@ -58,12 +58,14 @@
                 </div>
                 <div
                     class="mt-5 grid grid-cols-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-                    <button class="primary" type="submit">Pesquisar</button>
+                    <button class="primary" type="submit">
+                        <div *ngIf="onHttp else other_content" class="loading-indicator">
+                            Loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+                        </div>      
+                        <ng-template #other_content>Pesquisar</ng-template>
+                    </button>
                 </div>
-            </div>
-            <div *ngIf="onHttp" class="loading-indicator">
-                Loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
-            </div>
+            </div>            
             <div *ngIf="log.length > 0" class="log-messages">
                 <ul>
                     <li *ngFor="let message of log">{{ message }}</li>
