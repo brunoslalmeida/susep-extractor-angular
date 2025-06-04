@@ -51,14 +51,8 @@ export class ResseguroCompoenent implements OnInit {
 
     log: string[] = [];
 
-    table: {
-        months: string[];
-        names: string[];
-        data: {
-            [key: string]: string;
-        }[];
-    } | null = null;
-
+    table: {[key: string]: string;}[] | null = null;
+    
     companies: ICompany[] = [];
     types: IType[] = [];
 
@@ -183,48 +177,57 @@ export class ResseguroCompoenent implements OnInit {
         return months <= 0 ? 0 : months;
     }
 
-    transformData(result: IResult[]) {
-        if (!result || result.length === 0) {
-            return { months: [], names: [], data: [] };
+    transformData(results: IResult[]): {[key: string]: string;}[] {
+        const data: { [key: string]: string }[] = [];
+        
+        if (!results || results.length === 0) {
+            return data;
         }
 
-        const months = result.map((item) => item.month);
-        const allNamesWithDuplicates = result.flatMap((item) =>
-            item.values.map((val) => val.name)
-        );
+        for (const result of results) {
+            for (const [index, value] of result.values.entries()) {
+                if (value.value === null || value.value === undefined) continue;
+                
+                const row: { [key: string]: string } = data[index] || {};                
+                row[result.month + ' - Value'] = value.value;
+                row[result.month + ' - Category'] = value.name;
 
-        const namesMap = new Map();
-        allNamesWithDuplicates.forEach((name) => {
-            if (name !== undefined) {
-                namesMap.set(name, true);
+                data[index] = row;
             }
-        });
-        const names = Array.from(namesMap.keys());
+        }
 
-        const data = names.map((name) => {
-            const row: { [key: string]: string } = { name };
-            months.forEach((month) => {
-                const monthData = result.find((item) => item.month === month);
-                if (monthData && monthData.values) {
-                    const nameValue = monthData.values.find((val) => val.name === name);
-                    row[month] = nameValue ? nameValue.value : '0';
-                } else {
-                    row[month] = '0';
-                }
-            });
-            return row;
-        });
-
-        console.log(data);
-        return { months, names, data };
+        return data ;
     }
 
-    exportToExcel(): void {
+    exportToExcel() {
         if (!this.table) return;
-        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.table.data);
+
+            // Find the correct type name from this.types
+    const selectedType = this.types.find(type => type.code === this.susepForm.value.type);
+    const typeName = selectedType ? selectedType.value : 'Unknown Type';
+
+        // Add a metadata row with requested information
+        const metadataRow = {
+            'Requested Company': this.susepForm.value.company ,
+            'Requested Type': typeName ,
+            'Start Date': this.susepForm.value.start ? `${this.susepForm.value.start?.getFullYear()}${('0' + (this.susepForm.value.start?.getMonth() + 1)).slice(
+                -2
+            )}` : '',
+            'End Date': this.susepForm.value.end ? `${this.susepForm.value.end?.getFullYear()}${('0' + (this.susepForm.value.end?.getMonth() + 1)).slice(
+                -2
+            )}` : '' ,
+        };
+
+        // Combine metadata, empty rows, and the table data
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.table);
+        const ws2: XLSX.WorkSheet = XLSX.utils.json_to_sheet([metadataRow]);
         const wb: XLSX.WorkBook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Report');
-        XLSX.writeFile(wb, 'report.xlsx');
+        XLSX.utils.book_append_sheet(wb, ws2, 'Metadata');
+        const timestamp = new Date().toISOString().replace(/[-:.]/g, '');
+        XLSX.writeFile(wb, `report_resseguro_${timestamp}.xlsx`);
     }
 
 }
+
+
