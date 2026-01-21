@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { RouterModule } from '@angular/router';
 
 import { ResseguroCompoenent, SeguroCompoenent } from './components'
 
@@ -23,6 +24,7 @@ import { ResseguroCompoenent, SeguroCompoenent } from './components'
     MatIconModule,
     MatTabsModule,
     MatInputModule,
+    RouterModule,
     MatFormFieldModule,
     ReactiveFormsModule,
     MatDatepickerModule,

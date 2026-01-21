@@ -1,35 +1,12 @@
-<div class="bg-white">
-  <div class="relative isolate px-6 pt-14 lg:px-8">
-    <div class="mx-auto max-w-2xl">
-      <div class="hidden sm:mb-8 sm:flex sm:justify-center">
-        <div
-          class="relative rounded-full px-3 py-1 text-sm/6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
-          Susep Extração de Dados.
-        </div>
-      </div>
+<div class="flex justify-center">
+    <div class="w-full max-w-screen-lg">
+      <h1 class="text-center text-2xl font-bold my-4">{{ title }}</h1>
+  
+      <nav mat-tab-nav-bar class="mb-4">
+        <a mat-tab-link routerLink="/seguro" routerLinkActive="mat-tab-link-active">Seguro</a>
+        <a mat-tab-link routerLink="/resseguro" routerLinkActive="mat-tab-link-active">Resseguro</a>
+      </nav>
+  
+      <router-outlet></router-outlet>
     </div>
   </div>
-  <div class="isolate py-6">
-    <div class="absolute inset-x-0 top-[-10rem] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[-20rem]"
-      aria-hidden="true"></div>
-    <div class="mx-auto max-w-2xl text-center">
-      <h2 class="text-balance text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
-        Formulário SUSEP
-      </h2>
-      <p class="mt-2 text-lg/8 text-gray-600">
-        Escolha os dados a serem exportados
-      </p>
-    </div>
-    <div class="mx-auto mt-8 max-w-xl">
-      <mat-tab-group>
-        <mat-tab label="Resseguradoras">
-          <resseguro-component></resseguro-component>
-        </mat-tab>
-        <mat-tab label="Seguradoras Locais"> 
-          <seguro-component></seguro-component>
-        </mat-tab>
-      </mat-tab-group>
-
-    </div>
-  </div>
-</div>

@@ -2,7 +2,7 @@
     <div class="grid grid-cols-1 gap-x-8 gap-y-6">
         <div class="w-full">
             <div class="sm:col-span-3 mt-5">
-                <label for="company" class="block text-sm font-medium text-gray-900">Empresas de Resseguro</label>
+                <label for="company" class="block text-sm font-medium text-gray-900">{{ title }}</label>
                 <div class="mt-2 grid grid-cols-1">
                     <select id="company" autocomplete="off" formControlName="company"
                         class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm">
@@ -48,7 +48,7 @@
                     <div class="relative max-w-sm">
                         <mat-form-field style="display: flex">
                             <input matInput [matDatepicker]="end_picker" formControlName="end" class="bg-white" />
-                            <mat-label>Mês Fim</mat-label>
+                            <mat-label>Mês Início</mat-label>
                             <mat-datepicker-toggle matIconSuffix [for]="end_picker">
                                 <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
                             </mat-datepicker-toggle>
@@ -65,7 +65,7 @@
                         <ng-template #other_content>Pesquisar</ng-template>
                     </button>
                 </div>
-            </div>            
+            </div>
             <div *ngIf="log.length > 0" class="log-messages">
                 <ul>
                     <li *ngFor="let message of log">{{ message }}</li>
