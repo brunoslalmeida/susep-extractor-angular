@@ -2,10 +2,10 @@
     <div class="grid grid-cols-1 gap-x-8 gap-y-6">
         <div class="w-full">
             <div class="sm:col-span-3 mt-5">
-                <label for="company" class="block text-sm/6 font-medium text-gray-900">Empresas de Seguro Local</label>
+                <label for="company" class="block text-sm font-medium text-gray-900">Empresas de Seguro Local</label>
                 <div class="mt-2 grid grid-cols-1">
                     <select id="company" autocomplete="off" formControlName="company"
-                        class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                        class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm">
                         <option *ngFor="let company of companies" [value]="company.code" class="capitalize">
                             {{ company.name }}
                         </option>
@@ -19,10 +19,10 @@
                 </div>
             </div>
             <div class="sm:col-span-3 mt-5">
-                <label for="types" class="block text-sm/6 font-medium text-gray-900">Demonstração:</label>
+                <label for="types" class="block text-sm font-medium text-gray-900">Demonstração:</label>
                 <div class="mt-2 grid grid-cols-1">
                     <select id="types" autocomplete="off" formControlName="type"
-                        class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                        class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm">
                         <option *ngFor="let type of types" [value]="type.code" class="capitalize">
                             {{ type.value }}
                         </option>
