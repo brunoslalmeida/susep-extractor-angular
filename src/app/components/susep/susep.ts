@@ -8,26 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { HttpClient } from '@angular/common/http';
-
-interface ICompany {
-    code: string;
-    name: string;
-}
-
-interface IType {
-    code: string;
-    value: string;
-}
-
-interface IResult {
-    month: string;
-    values: IValues[];
-}
-
-interface IValues {
-    name: string;
-    value: string;
-}
+import { ICompany, IResult, IType, IValues } from '../../models/common.models';
 
 @Component({
     selector: 'susep-component',
