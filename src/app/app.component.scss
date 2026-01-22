@@ -1,3 +1,4 @@
+
 .loading-indicator {
   text-align: center;
   font-size: 1.5em;
@@ -54,3 +55,41 @@
 .isolate {
   margin: 0 20px
 }
+
+/* --- Estratégia de Estilo Final --- */
+
+/* Oculta o indicador de aba animado padrão do Material */
+:host ::ng-deep .mdc-tab-indicator {
+  display: none !important;
+}
+
+/* Estilo para TODAS os links de abas */
+:host ::ng-deep a.mat-mdc-tab-link {
+  border-radius: 6px 6px 0 0 !important;
+  /* CADA aba tem sua própria borda inferior, formando a linha */
+  border-bottom: 2px solid #4a90e2 !important;
+  /* REMOVE o focus-ring (box-shadow) azul do Tailwind */
+  box-shadow: none !important;
+}
+
+/* Estilo para a aba ATIVA */
+:host ::ng-deep a.mat-mdc-tab-link.mat-tab-link-active {
+  background-color: #f9fafb !important;
+  border-top: 2px solid #4a90e2 !important;
+  border-left: 2px solid #4a90e2 !important;
+  border-right: 2px solid #4a90e2 !important;
+  /* A borda inferior da aba ativa é da cor de fundo, criando a lacuna */
+  border-bottom-color: #f9fafb !important; 
+  margin-bottom: -2px !important; /* Alinha a aba com o conteúdo abaixo */
+}
+
+/* Cor do texto para as abas (ativas e inativas) */
+:host ::ng-deep a.mat-mdc-tab-link .mdc-tab__text-label {
+   color: #4a90e2;
+}
+
+/* Estilo do texto para a aba ATIVA */
+:host ::ng-deep a.mat-mdc-tab-link.mat-tab-link-active .mdc-tab__text-label {
+  font-weight: bold;
+}
+
