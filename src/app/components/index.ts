@@ -1,4 +1,3 @@
-import { ResseguroCompoenent } from './resseguro'
-import { SeguroCompoenent } from './seguro'
-
-export { ResseguroCompoenent, SeguroCompoenent }; 
+export * from './seguro';
+export * from './resseguro';
+export * from './demonstrativo';

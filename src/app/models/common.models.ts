@@ -1,7 +1,10 @@
-export interface ICompany {
+export interface IElement {
     code: string;
     name: string;
 }
+
+export type ICompany = IElement;
+export type IEntity = IElement;
 
 export interface IType {
     code: string;
@@ -17,3 +20,5 @@ export interface IValues {
     name: string;
     value: string;
 }
+
+

@@ -1,12 +1,32 @@
 <div class="flex justify-center">
-    <div class="w-full max-w-screen-lg">
-      <h1 class="text-center text-2xl font-bold my-4">{{ title }}</h1>
-  
-      <nav mat-tab-nav-bar class="mb-4">
-        <a mat-tab-link routerLink="/seguro" routerLinkActive="mat-tab-link-active">Seguro</a>
-        <a mat-tab-link routerLink="/resseguro" routerLinkActive="mat-tab-link-active">Resseguro</a>
-      </nav>
-  
+  <div class="w-full max-w-screen-lg">
+    <h1 class="text-center text-2xl font-bold my-4">{{ title }}</h1>
+
+    <nav mat-tab-nav-bar [tabPanel]="panel" class="mb-4">
+      <a mat-tab-link 
+         routerLink="/seguro" 
+         routerLinkActive #r1="routerLinkActive" 
+         [active]="r1.isActive">
+         Seguro
+      </a>
+    
+      <a mat-tab-link 
+         routerLink="/resseguro" 
+         routerLinkActive #r2="routerLinkActive" 
+         [active]="r2.isActive">
+         Resseguro
+      </a>
+    
+      <a mat-tab-link 
+         routerLink="/demonstrativo" 
+         routerLinkActive #r3="routerLinkActive" 
+         [active]="r3.isActive">
+         Demonstrativo
+      </a>
+    </nav>
+    
+    <mat-tab-nav-panel #panel>
       <router-outlet></router-outlet>
-    </div>
+    </mat-tab-nav-panel>
   </div>
+</div>

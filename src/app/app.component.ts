@@ -11,14 +11,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { RouterModule } from '@angular/router';
-
-import { ResseguroCompoenent, SeguroCompoenent } from './components'
-
+import { DemonstrativoComponent, ResseguroComponent, SeguroComponent } from './components';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  providers: [provideNativeDateAdapter()],
+  providers: [provideNativeDateAdapter(), ResseguroComponent, SeguroComponent, DemonstrativoComponent],
   imports: [
     CommonModule,
     MatIconModule,
@@ -28,8 +26,6 @@ import { ResseguroCompoenent, SeguroCompoenent } from './components'
     MatFormFieldModule,
     ReactiveFormsModule,
     MatDatepickerModule,
-    ResseguroCompoenent,
-    SeguroCompoenent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

@@ -1,3 +1,1 @@
-import { SeguroCompoenent } from './seguro'
-
-export { SeguroCompoenent }
+export * from './seguro'

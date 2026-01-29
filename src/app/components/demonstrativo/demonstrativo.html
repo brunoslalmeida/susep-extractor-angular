@@ -1,0 +1,62 @@
+<form [formGroup]="susepForm" (ngSubmit)="onSubmit()" class="mx-auto mt-8 max-w-xl">
+    <div class="grid grid-cols-1 gap-x-8 gap-y-6">
+        <div class="w-full">
+            <div class="sm:col-span-3 mt-5">
+                <label for="entity" class="block text-sm font-medium text-gray-900">Entidades</label>
+                <div class="mt-2 grid grid-cols-1">
+                    <select id="entity" autocomplete="off" formControlName="entity"
+                        class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm">
+                        <option *ngFor="let entity of entities" [value]="entity.code" class="capitalize">
+                            {{ entity.name }}
+                        </option>
+                    </select>
+                    <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4"
+                        viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
+                        <path fill-rule="evenodd"
+                            d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </div>
+            <div class="sm:col-span-3 mt-5">
+                <label for="types" class="block text-sm font-medium text-gray-900">Tipo de arquivo:</label>
+                <div class="mt-2 grid grid-cols-1">
+                    <select id="types" autocomplete="off" formControlName="type"
+                        class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm">
+                        <option *ngFor="let type of types" [value]="type.code" class="capitalize">
+                            {{ type.value }}
+                        </option>
+                    </select>
+                    <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4"
+                        viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
+                        <path fill-rule="evenodd"
+                            d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-7 grid grid-cols-2 gap-4">
+                <div class="relative max-w-sm">
+                    <mat-form-field style="display: flex">
+                        <input matInput [matDatepicker]="start_picker" [min]="minDate" [max]="maxDate" formControlName="start" class="bg-white" />
+                        <mat-label>Ano Início</mat-label>
+                        <mat-datepicker-toggle matIconSuffix [for]="start_picker">
+                            <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #start_picker startView="multi-year" (yearSelected)="setYear($event, 'start', start_picker)"></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="relative max-w-sm">
+                    <mat-form-field style="display: flex">
+                        <input matInput [matDatepicker]="end_picker" [min]="minDate" [max]="maxDate"  formControlName="end" class="bg-white" />
+                        <mat-label>Ano Fim</mat-label>
+                        <mat-datepicker-toggle matIconSuffix [for]="end_picker">
+                            <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #end_picker startView="multi-year" (yearSelected)="setYear($event, 'end', end_picker)"></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

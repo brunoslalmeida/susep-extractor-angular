@@ -73,8 +73,8 @@
 }
 
 /* Estilo para a aba ATIVA */
-:host ::ng-deep a.mat-mdc-tab-link.mat-tab-link-active {
-  background-color: #f9fafb !important;
+:host ::ng-deep a.mat-mdc-tab-link.mdc-tab--active {
+  background-color: whitesmoke !important;
   border-top: 2px solid #4a90e2 !important;
   border-left: 2px solid #4a90e2 !important;
   border-right: 2px solid #4a90e2 !important;
@@ -89,7 +89,7 @@
 }
 
 /* Estilo do texto para a aba ATIVA */
-:host ::ng-deep a.mat-mdc-tab-link.mat-tab-link-active .mdc-tab__text-label {
+:host ::ng-deep a.mat-mdc-tab-link.mdc-tab--active .mdc-tab__text-label {
   font-weight: bold;
 }
 

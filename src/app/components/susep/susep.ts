@@ -7,14 +7,20 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { HttpClient } from '@angular/common/http';
+import { GenericSusepAPI } from '../../api';
 import { ICompany, IResult, IType, IValues } from '../../models/common.models';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { CustomYearMonthAdapter, YYYYMM_FORMATS } from '../formats';
 
 @Component({
     selector: 'susep-component',
     standalone: true,
     templateUrl: './susep.html',
     styleUrl: './susep.scss',
+    providers: [
+        { provide: DateAdapter, useClass: CustomYearMonthAdapter },
+        { provide: MAT_DATE_FORMATS, useValue: YYYYMM_FORMATS },
+    ],
     imports: [
         CommonModule,
         MatIconModule,
@@ -27,7 +33,7 @@ import { ICompany, IResult, IType, IValues } from '../../models/common.models';
 export class SusepComponent implements OnInit {
     @Input() type: 'seguro' | 'resseguro' = 'seguro';
 
-    private baseUrl = 'https://susep-extractor.bruno-s-l-almeida.workers.dev/seguro';
+    api = new GenericSusepAPI(this.type)
 
     hasData = false;
     onHttp = false;
@@ -35,6 +41,13 @@ export class SusepComponent implements OnInit {
     log: string[] = [];
 
     table: { [key: string]: string; }[] | null = null;
+    maxDate: Date = this.calculateMaxDate();
+
+    private calculateMaxDate(): Date {
+        const date = new Date();
+        date.setMonth(date.getMonth() - 2);
+        return date;
+    }
 
     companies: ICompany[] = [];
     types: IType[] = [];
@@ -46,20 +59,21 @@ export class SusepComponent implements OnInit {
         end: new FormControl<Date | undefined>(undefined, Validators.required),
     });
 
-    constructor(private http: HttpClient) { }
+    setMonthAndYear(normalizedMonthAndYear: Date, controlName: string, datepicker: any) {
+        const ctrlValue = this.susepForm.get(controlName)?.value || new Date();
+        ctrlValue.setFullYear(normalizedMonthAndYear.getFullYear());
+        ctrlValue.setMonth(normalizedMonthAndYear.getMonth());
 
-    get title() {
+        this.susepForm.get(controlName)?.setValue(ctrlValue);
+        datepicker.close();
+    }
+
+    get company_label() {
         return this.type === 'seguro' ? 'Empresas de Seguro Local' : 'Empresas de Resseguro Local'
     }
 
     ngOnInit(): void {
-        this.baseUrl = `https://susep-extractor.bruno-s-l-almeida.workers.dev/${this.type}`;
-
-        this.http
-            .get<{
-                companies: ICompany[];
-                types: IType[];
-            }>(this.baseUrl)
+        this.api.get()
             .subscribe({
                 next: (data) => {
                     this.companies = data.companies;
@@ -70,6 +84,20 @@ export class SusepComponent implements OnInit {
                     this.log.push('Error fetching initial data.');
                 },
             });
+
+        this.susepForm.get('start')?.valueChanges.subscribe((start) => {
+            const end = this.susepForm.get('end')?.value;
+            if (start && end && start > end) {
+                this.susepForm.get('end')?.setValue(new Date(start));
+            }
+        });
+
+        this.susepForm.get('end')?.valueChanges.subscribe((end) => {
+            const start = this.susepForm.get('start')?.value;
+            if (start && end && end < start) {
+                this.susepForm.get('start')?.setValue(new Date(end), { emitEvent: false });
+            }
+        });
     }
 
     onSubmit(): void {
@@ -117,9 +145,9 @@ export class SusepComponent implements OnInit {
         ).slice(-2)}`;
         this.log.push(`Fetching report for ${month}`);
 
-        this.http.post(this.baseUrl, { company, month, type }).subscribe({
+        this.api.post({ company, month, type }).subscribe({
             next: (result) => {
-                results.push({ month, values: <IValues[]>result });
+                results.push({ month, values: result });
                 console.log(results);
                 this.log.push(`Report for ${month} fetched successfully`);
             },

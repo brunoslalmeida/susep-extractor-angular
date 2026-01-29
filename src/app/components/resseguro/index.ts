@@ -1,3 +1,1 @@
-import { ResseguroCompoenent } from './resseguro'
-
-export { ResseguroCompoenent }
+export * from './resseguro'

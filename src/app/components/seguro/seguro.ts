@@ -7,4 +7,4 @@ import { SusepComponent } from '../susep/susep';
     template: '<susep-component type="seguro"></susep-component>',
     imports: [SusepComponent]
 })
-export class SeguroCompoenent { }
+export class SeguroComponent { }
