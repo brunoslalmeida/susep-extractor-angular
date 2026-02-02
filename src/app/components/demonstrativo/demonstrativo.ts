@@ -6,9 +6,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { DemonstrativoAPI } from '../../api/demonstrativo';
-import { IEntity, IResult, IType } from '../../models/common.models';
+import { IEntity, IType } from '../../models/common.models';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { YEAR_FORMATS } from '../formats';
+import { HttpClient } from '@angular/common/http';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
     selector: 'demonstrativo-component',
@@ -45,9 +47,12 @@ export class DemonstrativoComponent {
 
     entities: IEntity[] = [];
     types: IType[] = [];
+    links: { name: string, link: string }[] = [];
 
     minDate: Date = new Date(2011, 0, 1);
     maxDate: Date = new Date(new Date().getFullYear() - 1, 11, 31);
+
+    constructor(private http: HttpClient) { }
 
     ngOnInit(): void {
         this.api.get()
@@ -100,17 +105,17 @@ export class DemonstrativoComponent {
             return;
         }
 
-        const links = this.generateLinks(entity, start, end, type);
+        this.downloadLinks(entity, start, end, type);
     }
 
-    generateLinks(entity: string, start: number, end: number, type: string) {
+    async downloadLinks(entity: string, start: number, end: number, type: string) {
         const links: string[] = [];
         for (let year = start; year <= end; year++) {
-            const link = `https://www2.susep.gov.br/download/comoc/${entity}-${type}-${year}${type === 'IN' ? '12' : '06'}.pdf`;
-            this.log.push(`Generating link for ${entity} ${type} ${year}: ${link}`);
-            links.push(link);
-        }
-        return links;
-    }
+            const name = `${entity}-${type}-${year}${type === 'IN' ? '06' : '12'}.pdf`;
+            const link = `https://www2.susep.gov.br/download/comoc/${name}`;
 
+            this.links.push({ name, link });
+        }
+        this.onHttp = false;
+    }
 }

@@ -38,26 +38,24 @@
                     <div class="relative max-w-sm">
                         <mat-form-field style="display: flex" class="w-full">
                             <mat-label>Mês Início</mat-label>
-                            <input matInput [matDatepicker]="start_picker" 
-                                   [max]="susepForm.get('end')?.value || maxDate" 
-                                   formControlName="start" class="bg-white" />
+                            <input matInput [matDatepicker]="start_picker"
+                                [max]="susepForm.get('end')?.value || maxDate" formControlName="start"
+                                class="bg-white" />
                             <mat-datepicker-toggle matIconSuffix [for]="start_picker">
                                 <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
                             </mat-datepicker-toggle>
-                
+
                             <mat-datepicker #start_picker startView="multi-year"
                                 (monthSelected)="setMonthAndYear($event, 'start', start_picker)">
                             </mat-datepicker>
                         </mat-form-field>
                     </div>
-                
+
                     <div class="relative max-w-sm">
                         <mat-form-field style="display: flex" class="w-full">
                             <mat-label>Mês Fim</mat-label>
-                            <input matInput [matDatepicker]="end_picker" 
-                                   [min]="susepForm.get('start')?.value"
-                                   [max]="maxDate"
-                                   formControlName="end" class="bg-white" />
+                            <input matInput [matDatepicker]="end_picker" [min]="susepForm.get('start')?.value"
+                                [max]="maxDate" formControlName="end" class="bg-white" />
                             <mat-datepicker-toggle matIconSuffix [for]="end_picker">
                                 <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
                             </mat-datepicker-toggle>
