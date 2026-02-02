@@ -12,7 +12,7 @@ export interface IType {
 }
 
 export interface IResult {
-    month: string;
+    key: string;
     values: IValues[];
 }
 

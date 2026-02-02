@@ -38,25 +38,51 @@
             <div class="mt-7 grid grid-cols-2 gap-4">
                 <div class="relative max-w-sm">
                     <mat-form-field style="display: flex">
-                        <input matInput [matDatepicker]="start_picker" [min]="minDate" [max]="maxDate" formControlName="start" class="bg-white" />
+                        <input matInput [matDatepicker]="start_picker" [min]="minDate" [max]="maxDate"
+                            formControlName="start" class="bg-white" />
                         <mat-label>Ano Início</mat-label>
                         <mat-datepicker-toggle matIconSuffix [for]="start_picker">
                             <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
                         </mat-datepicker-toggle>
-                        <mat-datepicker #start_picker startView="multi-year" (yearSelected)="setYear($event, 'start', start_picker)"></mat-datepicker>
+                        <mat-datepicker #start_picker startView="multi-year"
+                            (yearSelected)="setYear($event, 'start', start_picker)"></mat-datepicker>
                     </mat-form-field>
                 </div>
                 <div class="relative max-w-sm">
                     <mat-form-field style="display: flex">
-                        <input matInput [matDatepicker]="end_picker" [min]="minDate" [max]="maxDate"  formControlName="end" class="bg-white" />
+                        <input matInput [matDatepicker]="end_picker" [min]="minDate" [max]="maxDate"
+                            formControlName="end" class="bg-white" />
                         <mat-label>Ano Fim</mat-label>
                         <mat-datepicker-toggle matIconSuffix [for]="end_picker">
                             <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
                         </mat-datepicker-toggle>
-                        <mat-datepicker #end_picker startView="multi-year" (yearSelected)="setYear($event, 'end', end_picker)"></mat-datepicker>
+                        <mat-datepicker #end_picker startView="multi-year"
+                            (yearSelected)="setYear($event, 'end', end_picker)"></mat-datepicker>
                     </mat-form-field>
                 </div>
             </div>
+            <div
+                class="mt-5 grid grid-cols-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+                <button class="primary" type="submit" [attr.disabled]="onHttp? true : null">
+                    <div *ngIf="onHttp else other_content" class="loading-indicator">
+                        Loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+                    </div>
+                    <ng-template #other_content>Pesquisar</ng-template>
+                </button>
+            </div>
         </div>
+        <div *ngIf="log.length > 0" class="log-messages">
+            <ul>
+                <li *ngFor="let message of log">{{ message }}</li>
+            </ul>
+        </div>
+        <!-- Export button (visible when table data is available) -->
+        <!-- <div *ngIf="table" class="mt-5">
+            <button class="primary bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full"
+                type="button" (click)="exportToExcel()">
+                Export to Excel
+            </button>
+        </div> -->
+    </div>
     </div>
 </form>

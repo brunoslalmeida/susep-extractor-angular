@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { DemonstrativoAPI } from '../../api/demonstrativo';
-import { IEntity, IType } from '../../models/common.models';
+import { IEntity, IResult, IType } from '../../models/common.models';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { YEAR_FORMATS } from '../formats';
 
@@ -41,7 +41,7 @@ export class DemonstrativoComponent {
     api = new DemonstrativoAPI();
 
     log: string[] = [];
-    table: { [key: string]: string; }[] | null = null;
+    table: { [key: string]: string; }[] = [];
 
     entities: IEntity[] = [];
     types: IType[] = [];
@@ -71,6 +71,46 @@ export class DemonstrativoComponent {
     }
 
     onSubmit() {
-        throw new Error('Method not implemented.');
+        if (this.susepForm.invalid) {
+            this.log.push('Form is invalid. Please fill all required fields.');
+            return;
+        }
+
+        this.hasData = false;
+        this.onHttp = true;
+
+        this.log = [];
+        this.table = [];
+
+        const data = this.susepForm.value;
+        const start = data.start?.getFullYear();
+        const end = data.end?.getFullYear();
+        const entity = data.entity;
+        const type = data.type;
+
+        if (!start || !end || !type || !entity) {
+            this.onHttp = false;
+            this.log.push('Missing form data.');
+            return;
+        }
+
+        if (start > end) {
+            this.onHttp = false;
+            this.log.push('Start date cannot be after end date.');
+            return;
+        }
+
+        const links = this.generateLinks(entity, start, end, type);
     }
+
+    generateLinks(entity: string, start: number, end: number, type: string) {
+        const links: string[] = [];
+        for (let year = start; year <= end; year++) {
+            const link = `https://www2.susep.gov.br/download/comoc/${entity}-${type}-${year}${type === 'IN' ? '12' : '06'}.pdf`;
+            this.log.push(`Generating link for ${entity} ${type} ${year}: ${link}`);
+            links.push(link);
+        }
+        return links;
+    }
+
 }

@@ -147,7 +147,7 @@ export class SusepComponent implements OnInit {
 
         this.api.post({ company, month, type }).subscribe({
             next: (result) => {
-                results.push({ month, values: result });
+                results.push({ key: month, values: result });
                 console.log(results);
                 this.log.push(`Report for ${month} fetched successfully`);
             },
@@ -161,7 +161,7 @@ export class SusepComponent implements OnInit {
 
                 if (count === 0) {
                     this.onHttp = false;
-                    this.table = this.transformData(results);
+                    this.table = this.api.transformData(results);
                     this.log.push('All reports fetched successfully');
                 } else {
                     const newStart = new Date(start);
@@ -194,29 +194,7 @@ export class SusepComponent implements OnInit {
         return months <= 0 ? 0 : months;
     }
 
-    transformData(results: IResult[]): { [key: string]: string; }[] {
-        const data: { [key: string]: string }[] = [];
-
-        if (!results || results.length === 0) {
-            return data;
-        }
-
-        for (const result of results) {
-            for (const [index, value] of result.values.entries()) {
-                if (value.value === null || value.value === undefined) continue;
-
-                const row: { [key: string]: string } = data[index] || {};
-                row[result.month + ' - Value'] = value.value;
-                row[result.month + ' - Category'] = value.name;
-
-                data[index] = row;
-            }
-        }
-
-        return data;
-    }
-
-    exportToExcel() {
+    public exportToExcel() {
         if (!this.table) return;
 
         const selectedType = this.types.find(
@@ -224,7 +202,7 @@ export class SusepComponent implements OnInit {
         );
         const typeName = selectedType ? selectedType.value : 'Unknown Type';
 
-        const metadataRow = {
+        const metadataTab = {
             'Requested Company': this.susepForm.value.company,
             'Requested Type': typeName,
             'Start Date': this.susepForm.value.start
@@ -239,12 +217,10 @@ export class SusepComponent implements OnInit {
                 : '',
         };
 
-        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.table);
-        const ws2: XLSX.WorkSheet = XLSX.utils.json_to_sheet([metadataRow]);
-        const wb: XLSX.WorkBook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Report');
-        XLSX.utils.book_append_sheet(wb, ws2, 'Metadata');
-        const timestamp = new Date().toISOString().replace(/[-:.]/g, '');
-        XLSX.writeFile(wb, `report_${this.type}_${timestamp}.xlsx`);
+        this.api.exportToExcel(
+            typeName,
+            this.table,
+            metadataTab
+        );
     }
 }
