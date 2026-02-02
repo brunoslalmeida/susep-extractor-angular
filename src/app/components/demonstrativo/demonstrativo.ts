@@ -105,17 +105,30 @@ export class DemonstrativoComponent {
             return;
         }
 
-        this.downloadLinks(entity, start, end, type);
+        this.addLinks(entity, start, end, type);
     }
 
-    async downloadLinks(entity: string, start: number, end: number, type: string) {
-        const links: string[] = [];
+    clearList() {
+        this.links = [];
+    }
+
+    addLinks(entity: string, start: number, end: number, type: string) {
+        this.onHttp = true;
+
         for (let year = start; year <= end; year++) {
-            const name = `${entity}-${type}-${year}${type === 'IN' ? '06' : '12'}.pdf`;
+            const month = type === 'IN' ? '06' : '12';
+            const name = `${entity}-${type}-${year}${month}.pdf`;
             const link = `https://www2.susep.gov.br/download/comoc/${name}`;
 
-            this.links.push({ name, link });
+            const isDuplicate = this.links.some(item => item.link === link);
+
+            if (!isDuplicate) {
+                this.links.unshift({ name, link });
+            } else {
+                this.log.push(`Item já existe: ${name}`);
+            }
         }
+
         this.onHttp = false;
     }
 }
